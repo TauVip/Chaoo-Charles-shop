@@ -1,9 +1,11 @@
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { addToCart } from '../features/cartSlice'
 import { useGetAllProductsQuery } from '../features/productsApi'
 
 const Home = () => {
+  const { items: products, status } = useSelector(state => state.products)
+  const auth = useSelector(state => state.auth)
   const { isLoading, error, data } = useGetAllProductsQuery()
   const dispatch = useDispatch()
   const navigate = useNavigate()

@@ -11,15 +11,17 @@ function App() {
   return (
     <div className='App'>
       <BrowserRouter>
-        <NavBar />
         <ToastContainer />
+        <NavBar />
 
-        <Routes>
-          <Route path='/' element={<Home />} />
-          <Route path='/cart' element={<Cart />} />
-          <Route path='/not-found' element={<NotFound />} />
-          <Route path='*' element={<Navigate to='/not-found' replace />} />
-        </Routes>
+        <div className='content-container'>
+          <Routes>
+            <Route path='/' element={<Home />} />
+            <Route path='/cart' element={<Cart />} />
+            <Route path='/not-found' element={<NotFound />} />
+            <Route path='*' element={<Navigate to='/not-found' />} />
+          </Routes>
+        </div>
       </BrowserRouter>
     </div>
   )
