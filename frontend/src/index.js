@@ -2,10 +2,10 @@ import { configureStore } from '@reduxjs/toolkit'
 import ReactDOM from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './App'
-import authSlice from './features/authSlice'
-import cartSlice, { getTotals } from './features/cartSlice'
-import { productsApi } from './features/productsApi'
-import productsSlice, { productsFetch } from './features/productsSlice'
+import authSlice, { loadUser } from './slices/authSlice'
+import cartSlice, { getTotals } from './slices/cartSlice'
+import { productsApi } from './slices/productsApi'
+import productsSlice, { productsFetch } from './slices/productsSlice'
 
 const store = configureStore({
   reducer: {
@@ -20,6 +20,7 @@ const store = configureStore({
 
 store.dispatch(productsFetch())
 store.dispatch(getTotals())
+store.dispatch(loadUser(null))
 
 const root = ReactDOM.createRoot(document.getElementById('root'))
 root.render(

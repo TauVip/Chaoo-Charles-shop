@@ -1,12 +1,9 @@
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { addToCart } from '../features/cartSlice'
-import { useGetAllProductsQuery } from '../features/productsApi'
+import { addToCart } from '../slices/cartSlice'
 
 const Home = () => {
-  const { items: products, status } = useSelector(state => state.products)
-  const auth = useSelector(state => state.auth)
-  const { isLoading, error, data } = useGetAllProductsQuery()
+  const { items: data, status } = useSelector(state => state.products)
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
@@ -17,18 +14,14 @@ const Home = () => {
 
   return (
     <div className='home-container'>
-      {isLoading ? (
-        <p>Loading...</p>
-      ) : error ? (
-        <p>An error occured...</p>
-      ) : (
+      {status === 'success' ? (
         <>
           <h2>New Arrivals</h2>
           <div className='products'>
             {data?.map(product => (
-              <div key={product.id} className='product'>
+              <div key={product._id} className='product'>
                 <h3>{product.name}</h3>
-                <img src={product.image} alt={product.name} />
+                <img src={product.image.url} alt={product.name} />
                 <div className='details'>
                   <span>{product.desc}</span>
                   <span className='price'>${product.price}</span>
@@ -40,6 +33,10 @@ const Home = () => {
             ))}
           </div>
         </>
+      ) : status === 'pending' ? (
+        <p>Loading...</p>
+      ) : (
+        <p>Unexpected error occured...</p>
       )}
     </div>
   )
