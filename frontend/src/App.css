@@ -9,6 +9,8 @@
 
 /* NavBar */
 .nav-bar {
+  position: sticky;
+  top: 0;
   height: 70px;
   background-color: black;
   display: flex;

@@ -4,6 +4,9 @@ import Widget from './summary-components/Widget'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { setHeaders, url } from '../../slices/api'
+import Chart from './summary-components/Chart'
+import Transactions from './summary-components/Transactions'
+import AllTimeData from './summary-components/AllTimeData'
 
 const Summary = () => {
   const [users, setUsers] = useState([])
@@ -12,7 +15,6 @@ const Summary = () => {
   const [ordersPerc, setOrdersPerc] = useState(0)
   const [income, setIncome] = useState([])
   const [incomePerc, setIncomePerc] = useState(0)
-  console.log(incomePerc)
 
   const compare = (a, b) => (a._id < b._id ? 1 : a._id > b._id ? -1 : 0)
 
@@ -58,8 +60,7 @@ const Summary = () => {
         data.sort(compare)
         setIncome(data)
         setIncomePerc(
-          data
-          //((data[0]?.total - data[1]?.total) / data[1]?.total) * 100
+          ((data[0]?.total - data[1]?.total) / data[1]?.total) * 100
         )
       } catch (err) {
         console.log(err)
@@ -90,7 +91,7 @@ const Summary = () => {
     },
     {
       icon: <FaChartBar />,
-      digits: income[0]?.total,
+      digits: income[0]?.total ? income[0]?.total / 100 : '',
       isMoney: true,
       title: 'Earnings',
       color: 'rgb(253,181,40)',
@@ -113,8 +114,12 @@ const Summary = () => {
             ))}
           </WidgetWrapper>
         </Overview>
+        <Chart />
       </MainStats>
-      <SideStats></SideStats>
+      <SideStats>
+        <Transactions />
+        <AllTimeData />
+      </SideStats>
     </StyledSummary>
   )
 }
