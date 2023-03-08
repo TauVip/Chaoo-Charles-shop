@@ -1,11 +1,15 @@
 import axios from 'axios'
 import { useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useDispatch } from 'react-redux'
+import { useNavigate, useParams } from 'react-router-dom'
 import styled from 'styled-components'
 import { setHeaders, url } from '../../slices/api'
+import { addToCart } from '../../slices/cartSlice'
 
 const Product = () => {
   const params = useParams()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   const [product, setProduct] = useState({})
   const [loading, setLoading] = useState(false)
@@ -28,7 +32,42 @@ const Product = () => {
     fetchData()
   }, [params.id])
 
-  return <div>Product: {params.id}</div>
+  const handleAddToCart = product => {
+    dispatch(addToCart(product))
+    navigate('/cart')
+  }
+
+  return (
+    <StyledProduct>
+      <ProductContainer>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          <>
+            <ImageContainer>
+              <img src={product.image?.url} alt='product' />
+            </ImageContainer>
+            <ProductDetails>
+              <h3>{product.name}</h3>
+              <p>
+                <span>Brand:</span> {product.brand}
+              </p>
+              <p>
+                <span>Description:</span> {product.desc}
+              </p>
+              <Price>${product.price?.toLocaleString()}</Price>
+              <button
+                className='product-add-to-cart'
+                onClick={() => handleAddToCart(product)}
+              >
+                Add To Cart
+              </button>
+            </ProductDetails>
+          </>
+        )}
+      </ProductContainer>
+    </StyledProduct>
+  )
 }
 export default Product
 

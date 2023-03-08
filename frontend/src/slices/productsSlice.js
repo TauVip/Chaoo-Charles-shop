@@ -6,7 +6,8 @@ import { setHeaders, url } from './api'
 const initialState = {
   items: [],
   status: null,
-  createStatus: null
+  createStatus: null,
+  deleteStatus: null
 }
 
 export const productsFetch = createAsyncThunk(
@@ -26,6 +27,19 @@ export const productsCreate = createAsyncThunk(
   async values => {
     try {
       const { data } = await axios.post(`${url}/products`, values, setHeaders())
+      return data
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response?.data)
+    }
+  }
+)
+
+export const productsDelete = createAsyncThunk(
+  'products/productsDelete',
+  async id => {
+    try {
+      const { data } = await axios.delete(`${url}/products/${id}`, setHeaders())
       return data
     } catch (error) {
       console.log(error)
@@ -61,6 +75,20 @@ const productSlice = createSlice({
     },
     [productsCreate.rejected]: state => {
       state.createStatus = 'rejected'
+    },
+    [productsDelete.pending]: state => {
+      state.deleteStatus = 'pending'
+    },
+    [productsDelete.fulfilled]: (state, action) => {
+      const newList = state.items.filter(
+        item => item._id !== action.payload._id
+      )
+      state.items = newList
+      state.deleteStatus = 'success'
+      toast.error('Product Deleted')
+    },
+    [productsDelete.rejected]: state => {
+      state.deleteStatus = 'rejected'
     }
   }
 })
