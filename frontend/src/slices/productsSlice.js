@@ -7,6 +7,7 @@ const initialState = {
   items: [],
   status: null,
   createStatus: null,
+  editStatus: null,
   deleteStatus: null
 }
 
@@ -27,6 +28,23 @@ export const productsCreate = createAsyncThunk(
   async values => {
     try {
       const { data } = await axios.post(`${url}/products`, values, setHeaders())
+      return data
+    } catch (error) {
+      console.log(error)
+      toast.error(error.response?.data)
+    }
+  }
+)
+
+export const productsEdit = createAsyncThunk(
+  'products/productsEdit',
+  async values => {
+    try {
+      const { data } = await axios.put(
+        `${url}/products/${values.product._id}`,
+        values,
+        setHeaders()
+      )
       return data
     } catch (error) {
       console.log(error)
@@ -75,6 +93,20 @@ const productSlice = createSlice({
     },
     [productsCreate.rejected]: state => {
       state.createStatus = 'rejected'
+    },
+    [productsEdit.pending]: state => {
+      state.editStatus = 'pending'
+    },
+    [productsEdit.fulfilled]: (state, action) => {
+      const updatedProducts = state.items.map(product =>
+        product._id === action.payload._id ? action.payload : product
+      )
+      state.items = updatedProducts
+      state.editStatus = 'success'
+      toast.info('Product Edited')
+    },
+    [productsEdit.rejected]: state => {
+      state.editStatus = 'rejected'
     },
     [productsDelete.pending]: state => {
       state.deleteStatus = 'pending'

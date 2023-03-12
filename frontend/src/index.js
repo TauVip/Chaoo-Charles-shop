@@ -4,12 +4,14 @@ import { Provider } from 'react-redux'
 import App from './App'
 import authSlice, { loadUser } from './slices/authSlice'
 import cartSlice, { getTotals } from './slices/cartSlice'
+import ordersSlice from './slices/ordersSlice'
 import { productsApi } from './slices/productsApi'
 import productsSlice, { productsFetch } from './slices/productsSlice'
 
 const store = configureStore({
   reducer: {
     products: productsSlice,
+    orders: ordersSlice,
     cart: cartSlice,
     auth: authSlice,
     [productsApi.reducerPath]: productsApi.reducer

@@ -70,4 +70,46 @@ router.delete('/:id', isAdmin, async (req, res) => {
   }
 })
 
+router.put('/:id', isAdmin, async (req, res) => {
+  if (req.body.productImg) {
+    try {
+      const destroyResponse = await cloudinary.uploader.destroy(
+        req.body.product.image.public_id
+      )
+      if (destroyResponse) {
+        const uploadedResponse = await cloudinary.uploader.upload(
+          req.body.productImg,
+          { upload_preset: 'Chaoo-Charles-shop' }
+        )
+        if (uploadedResponse) {
+          const updatedProduct = await Product.findByIdAndUpdate(
+            req.params.id,
+            {
+              $set: {
+                ...req.body.product,
+                image: uploadedResponse
+              }
+            },
+            { new: true }
+          )
+          res.status(200).send(updatedProduct)
+        }
+      }
+    } catch (err) {
+      res.status(500).send(err)
+    }
+  } else {
+    try {
+      const updatedProduct = await Product.findByIdAndUpdate(
+        req.params.id,
+        { $set: req.body.product },
+        { new: true }
+      )
+      res.status(200).send(updatedProduct)
+    } catch (err) {
+      res.status(500).send(err)
+    }
+  }
+})
+
 module.exports = router

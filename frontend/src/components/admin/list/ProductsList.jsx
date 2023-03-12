@@ -3,6 +3,7 @@ import { DataGrid } from '@mui/x-data-grid'
 import { useDispatch, useSelector } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { productsDelete } from '../../../slices/productsSlice'
+import EditProduct from '../EditProduct'
 
 export default function ProductsList() {
   const { items } = useSelector(state => state.products)
@@ -52,6 +53,7 @@ export default function ProductsList() {
           <Delete onClick={() => dispatch(productsDelete(params.row.id))}>
             Delete
           </Delete>
+          <EditProduct prodId={params.row.id} />
           <View onClick={() => navigate(`/product/${params.row.id}`)}>
             View
           </View>

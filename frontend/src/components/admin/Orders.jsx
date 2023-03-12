@@ -1,4 +1,6 @@
+import OrdersList from './list/OrdersList'
+
 const Orders = () => {
-  return <div>Orders</div>
+  return <OrdersList />
 }
 export default Orders

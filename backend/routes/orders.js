@@ -1,6 +1,6 @@
 const moment = require('moment')
 const { Order } = require('../models/order')
-const { isAdmin } = require('../middleware/auth')
+const { isAdmin, auth } = require('../middleware/auth')
 
 const router = require('express').Router()
 
@@ -16,6 +16,27 @@ router.get('/', isAdmin, async (req, res) => {
     console.log(err)
     res.status(500).send(err)
   }
+})
+
+router.put('/:id', isAdmin, async (req, res) => {
+  try {
+    const updatedOrder = await Order.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true }
+    )
+    res.status(200).send(updatedOrder)
+  } catch (err) {
+    res.status(500).send(err)
+  }
+})
+
+router.get('/findOne/:id', auth, async (req, res) => {
+  try {
+    const order = await Order.findById(req.params.id)
+    if (req.user._id !== order.userId || !req.user.isAdmin)
+      return res.status(403).send('Access denied. Not authorized...')
+  } catch (error) {}
 })
 
 router.get('/stats', isAdmin, async (_, res) => {
