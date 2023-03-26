@@ -1,10 +1,10 @@
 import styled from 'styled-components'
 import { DataGrid } from '@mui/x-data-grid'
 import { useDispatch, useSelector } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
 import { useEffect } from 'react'
-import { ordersFetch } from '../../../slices/ordersSlice'
+import { ordersEdit, ordersFetch } from '../../../slices/ordersSlice'
 import moment from 'moment'
+import { useNavigate } from 'react-router-dom'
 
 export default function OrdersList() {
   const { list } = useSelector(state => state.orders)
@@ -55,9 +55,25 @@ export default function OrdersList() {
       width: 220,
       renderCell: params => (
         <Actions>
-          <DispatchBtn>Dispatch</DispatchBtn>
-          <DeliveryBtn>Deliver</DeliveryBtn>
-          <View>View</View>
+          <DispatchBtn
+            onClick={() =>
+              dispatch(
+                ordersEdit({ id: params.row.id, delivery_status: 'dispatched' })
+              )
+            }
+          >
+            Dispatch
+          </DispatchBtn>
+          <DeliveryBtn
+            onClick={() =>
+              dispatch(
+                ordersEdit({ id: params.row.id, delivery_status: 'delivered' })
+              )
+            }
+          >
+            Deliver
+          </DeliveryBtn>
+          <View onClick={() => navigate(`/order/${params.row.id}`)}>View</View>
         </Actions>
       )
     }

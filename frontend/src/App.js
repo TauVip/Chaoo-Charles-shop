@@ -1,6 +1,6 @@
 import './App.css'
 import 'react-toastify/dist/ReactToastify.css'
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 import Cart from './components/Cart'
 import Home from './components/Home'
@@ -46,8 +46,7 @@ function App() {
               <Route path='users' element={<Users />} />
               <Route path='orders' element={<Orders />} />
             </Route>
-            <Route path='/not-found' element={<NotFound />} />
-            <Route path='*' element={<Navigate to='/not-found' />} />
+            <Route path='*' element={<NotFound />} />
           </Routes>
         </div>
       </BrowserRouter>

@@ -7,11 +7,13 @@ import cartSlice, { getTotals } from './slices/cartSlice'
 import ordersSlice from './slices/ordersSlice'
 import { productsApi } from './slices/productsApi'
 import productsSlice, { productsFetch } from './slices/productsSlice'
+import usersSlice from './slices/usersSlice'
 
 const store = configureStore({
   reducer: {
     products: productsSlice,
     orders: ordersSlice,
+    users: usersSlice,
     cart: cartSlice,
     auth: authSlice,
     [productsApi.reducerPath]: productsApi.reducer

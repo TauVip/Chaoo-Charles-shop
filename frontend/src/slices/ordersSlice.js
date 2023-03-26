@@ -16,7 +16,31 @@ export const ordersFetch = createAsyncThunk('orders/ordersFetch', async () => {
   }
 })
 
-export const ordersEdit = createAsyncThunk()
+export const ordersEdit = createAsyncThunk(
+  'orders/ordersEdit',
+  async (values, { getState }) => {
+    const state = getState()
+
+    let currentOrder = state.orders.list.filter(
+      order => order._id === values.id
+    )
+    const newOrder = {
+      ...currentOrder[0],
+      delivery_status: values.delivery_status
+    }
+
+    try {
+      const { data } = await axios.put(
+        `${url}/orders/${values.id}`,
+        newOrder,
+        setHeaders()
+      )
+      return data
+    } catch (error) {
+      console.log(error)
+    }
+  }
+)
 
 const ordersSlice = createSlice({
   name: 'orders',
@@ -33,9 +57,19 @@ const ordersSlice = createSlice({
     [ordersFetch.rejected]: state => {
       state.status = 'rejected'
     },
-    [ordersEdit.pending]: state => {},
-    [ordersEdit.fulfilled]: (state, action) => {},
-    [ordersEdit.rejected]: state => {}
+    [ordersEdit.pending]: state => {
+      state.status = 'pending'
+    },
+    [ordersEdit.fulfilled]: (state, action) => {
+      const updatedOrders = state.list.map(order =>
+        order._id === action.payload._id ? action.payload : order
+      )
+      state.list = updatedOrders
+      state.status = 'success'
+    },
+    [ordersEdit.rejected]: state => {
+      state.status = 'rejected'
+    }
   }
 })
 export default ordersSlice.reducer
