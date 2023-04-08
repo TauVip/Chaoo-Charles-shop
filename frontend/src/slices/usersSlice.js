@@ -24,7 +24,9 @@ export const userDelete = createAsyncThunk('users/userDelete', async id => {
     return data
   } catch (error) {
     console.log(error.response.data)
-    toast.error(error.response?.data, {})
+    toast.error(error.response?.data, {
+      position: 'bottom-left'
+    })
   }
 })
 

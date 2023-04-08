@@ -1,4 +1,6 @@
+import UsersList from './list/UsersList'
+
 const Users = () => {
-  return <div>Users</div>
+  return <UsersList />
 }
 export default Users
